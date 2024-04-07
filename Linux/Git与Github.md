@@ -55,7 +55,7 @@ git add .
 git commit # 这个会出现一个界面，让你写评论，类似于简介或者提醒
 git commit -m  '' # 可以在引号内，直接写评论
 # 推送到远程仓库
-git push -u origin main(your branch)
+git push -u origin main(your branch) # 禁止git push -f origin main 强制推送到远程仓库，因为这会之间覆盖远程仓库内的内容。
 ```
 
 origin：是远程仓库的别名。用于避免与本地仓库重名。
@@ -125,6 +125,10 @@ origin：是远程仓库的别名。用于避免与本地仓库重名。
 14. `git clone yourURL`
 
 不需要自己创建文件夹，它会把整个文件夹都克隆下来。在克隆之前，需要切换到你想存放文件的地址上。
+
+15. `git rm --cached fileName`
+
+清楚缓存区内的文件。
 
 ### 出现的问题
 
