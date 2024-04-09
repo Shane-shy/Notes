@@ -118,26 +118,55 @@ origin：是远程仓库的别名。用于避免与本地仓库重名。
 
 拉取origin/branch分支，并且与当前分支合并。相当于`git fetch + git merge branch`
 
-13. `git rm file`  OR `git rm -r file` ，前者是文件，后者是文件夹。
+13. `git rm file`  OR `git rm -r file` ，前者是文件，后者是文件夹。**注意：这会把本地文件也一起删了**
 
 删除远程仓库中的文件或者文件夹。之后，需要提交到远程仓库内。即`git commit -m 'deleteFile'`  + `git push origin branch`。还是需要慎重。
 
-14. `git clone yourURL`
+14. `git rm --cached fileName`
+
+清除缓存区内的文件。我的理解是**删除远程仓库内的文件，不删除本地文件**。之后，仍然需要`git commit -m 'your comment' + git push origin main`
+
+15. `git clone yourURL`
 
 不需要自己创建文件夹，它会把整个文件夹都克隆下来。在克隆之前，需要切换到你想存放文件的地址上。
 
-15. `git rm --cached fileName`
-
-清楚缓存区内的文件。
-
-### 出现的问题
+## 出现的问题
 
 仅展示目前遇到的问题，之后出现了问题会进行补充。
 
 1. 本地分支是master，而远程分支是main。不能推送到main分支。
 
-解决方法：`git fetch`获取远程仓库状态，更新本地仓库。之后，按照正常流程进行。
+解决方法：`git fetch`获取远程仓库状态，更新本地仓库。之后，按照正常流程进行。**如果不行**，尝试创建新的main分支，并切换到main分支，正常推送后，再删除master分支。
+
+```shell
+git checkout -b main
+git push origin main
+git checkout -D master
+```
 
 2. 当远程仓库内不为空的时候，需要先拉取仓库，才能推送到分支。
 
 解决方法：`git pull origin main` + 正常推送。之后，工作之前，都先pull一次。
+
+## 编写.gitignore
+
+在使用Git上传到Github的过程中，如果一个一个选择需要上传的文件是很麻烦的一件事，而且每次上传都要一个一个写文件名，那就更加麻烦了。因而，可以在本地编写.gitignore文件，忽略不需要上传的文件，直接`git add .`。
+
+1. 生效顺序
+
+从上到下，依次匹配。如果前面的范围比较大，后面的规则可能都不会生效。**不过，我们平常写的话，用不到什么复杂的匹配规则，可以直接用逗号隔开即可。**
+
+2. 基本语法
+
+```tex
+#：注释。跟python一样
+/：表示目录。/a/b/，如果从一开始就加了/，则表示从根目录开始。a/b/，这样就表示从当前目录开始。最后再加一个/，表示包含b目录下的所有文件。
+*：通配符，匹配多个字符。
+？：匹配单个字符
+!：表示不忽略某文件或者某目录，相当于取反
+
+其他复杂的匹配，可以参考正则表达式
+```
+
+**一行写一个规则**
+
