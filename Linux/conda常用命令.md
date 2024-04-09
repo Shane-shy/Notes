@@ -2,6 +2,8 @@
 
 anaconda的好处是可以把每个环境给隔离开，避免因为库版本问题导致的冲突。因此，强烈建议，一个项目就开一个虚拟环境，然后需要什么库就安装什么，并且指定版本。
 
+anaconda中的库的数量远小于pip中的库的数量，因此可能会遇见conda内没有的库，但pip内有。这个时候就只能使用pip安装了。
+
 ## [anaconda卸载](https://anaconda.org.cn/anaconda/install/uninstall/)
 
 1. 简单删除`rm -rf anacondaPath`，这个会留下一些文件，但是没关系，因为这方法很简单。
