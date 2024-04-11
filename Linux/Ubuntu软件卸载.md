@@ -11,7 +11,7 @@
 dpkg --list | grep appName
 # 删除
 sudo apt-get remove appName #只删除软件，不删除配置
-sudo apt-get purge remove appName #删除软件和配置
+sudo apt-get --purge remove appName #删除软件和配置
 # 清除不必要的依赖
 sudo apt-get automove 
 ```
