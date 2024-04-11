@@ -171,7 +171,7 @@ git pull origin branch # = git fetch + git merge origin branch
 `--cached` 只会影响缓存区，不会影响工作区。之后再提交到远程仓库中，就可以实现只删除远程仓库的文件了。
 
 ```shell
-git rm (-r 如果有文件夹，则需要添加) --cached 
+git rm (-r 如果有文件夹，则需要添加) --cached delete_file
 git commit -m 'delete xxx'
 git push origin branch
 ```
