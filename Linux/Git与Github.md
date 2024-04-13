@@ -222,8 +222,8 @@ git reset --hard HEAD~N
 #### 其他操作
 
 ```shell
-# 比较文件不同，缓存区的文件和工作区的差异
-git diff # 不知道为什么我尝试后，命令没有输出
+# 查看工作区（本地）的文件变化，即没有执行git add .的文件，执行了后就看不到了。
+git diff  
 # 移动或者重命名文件。参考文件删除，可以举一反三知道，如果要对远程仓库的文件进行移动，就需要进行commit和push
 git mv oldPath newPath
 git commit -m 'move xxx file' # 加了git其实就是为了对远程仓库进行操作。
