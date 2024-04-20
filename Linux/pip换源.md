@@ -12,19 +12,36 @@
 		我个人推荐清华源，日常使用没有问题。
 
 ## 操作流程
-1. Linux操作流程
+
+1. Linux或macos操作流程
 ```shell
-cd ~/.pip
+mkdir ~/.pip # 如果没有.pip文件夹，则创建一个
 vim pip.conf
 ```
-2 . 图片展示
-![image](./pip换源.assets/3420247-20240408002556407-1358771235.png)
+2 . 输入内容
 
-直接进行修改进行了。extra-index-url是指额外的源，当前源匹配不上的时候，匹配额外的源。
+```shell
+[global]
+index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+extra-index-url = https://mirrors.aliyun.com/pypi/simple
+[install]
+trusted-host = https://pypi.tuna.tsinghua.edu.cn
+# trusted-host 保留一个就可以了
+# trusted-host = https://mirrors.aliyun.com/pypi/simple
+```
+
+直接进行修改进行了。extra-index-url是指额外的源，同时匹配多个源。
 
 trusted-host就是网址除子页面的部分，如https://pypi.tuna.tsinghua.edu.cn。
+
+## 查看镜像
+
+`pip config list`
+
+
 
 参考文档：
 
 [菜鸟教程](https://www.runoob.com/w3cnote/pip-cn-mirror.html)
 	[清华源](https://mirrors.tuna.tsinghua.edu.cn/help/pypi/)
+
