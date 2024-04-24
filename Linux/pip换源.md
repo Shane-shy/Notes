@@ -16,6 +16,7 @@
 1. Linux或macos操作流程
 ```shell
 mkdir ~/.pip # 如果没有.pip文件夹，则创建一个
+cd ~/.pip
 vim pip.conf
 ```
 2 . 输入内容
