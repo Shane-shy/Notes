@@ -1,38 +1,27 @@
-# Ubuntu配置软件快捷方式
+# Ubuntu软件非`.deb`包安装及软件桌面快捷方式配置
 
-本次以Ubuntu安装pycharm为例。
+## 问题描述
 
-需要在`/usr/share/applications`进行配置。
+我们常用`apt`、`dpkg`命令安装`.deb`包来安装软件，不需要了解软件具体被安装的具体地址，并且安装完后，常常就能直接在应用内看到所安装的软件。但是，有一些软件，比如pycharm、Zotero等软件，官方并没有给`.deb`包而是zip或者tar的压缩包，这时软件安装在哪里，如何配置桌面快捷方式就都需要靠我们自己配置。
 
-1. 进入上述地址
-2. 将pycharm的配置写入.desktop文件
+==注意==：安装流程应参照官方的安装指南，本博客仅展示目前遇到的情况。
 
-```shell
-# 进入目录
-cd /usr/share/applications 
-# 查看其他软件的配置文件是怎么写的
-cat xxx.desktop
-# 模仿写pycharm的配置文件
-vim pycharm.desktop
+## 操作流程
 
-# 过滤信息，grep进行过滤。在前面添加|，后面可以使用正则表达式，也可以写可能出现的字符
-ls | grep pycharm
-```
+1. 准备阶段
 
-**以下以QQ为例，展示需要更改的地方：**
+下载官方压缩包，并将压缩包解压至`\opt`。一般软件是存放在**`\opt\`目录**下，必要时需要自己新建待安装软件目录。这个时候，往往可以直接通过命令行`./appName`或者`bash appName.sh`执行软件，但是这种方法始终还是不方便，所以需要创建快捷方式。
 
-![image-20240408102122700](./Ubuntu配置软件快捷方式.assets/image-20240408102122700.png)
+2. 编写`.desktop`
 
-name：软件名字
+在下载的压缩包内，往往会有一个`appName.desktop`（如果没有，则参照其他软件的`.desktop`内容自行编写），这是创建快捷方式的关键。主要修改其中的Exec和Icon，分别是对应可执行文件的位置和图标的位置。**注意：采用绝对路径编写。**
 
-Exec：软件执行的路径。这个因软件而异。比如Pycharm只需要 bash pycharm.sh
+对于Exec部分，pycharm是`Exec=/opt/pycharm/bin/pycharm.sh `，Zotero是`Exec=bash /opt/zotero/zotero %U`。如果可执行文件的地址确定正确，可以考虑在地址前加上`bash`。
 
-Icon：图标位置。一般下载软件后，软件的文件夹内都会有。
+3. 复制`.desktop`到`/usr/share/applications`
 
-StartupWMClass：不懂，但跟着改。
+`sudo cp /opt/appName/appName.desktop` `/usr/share/applications`，稍等一会儿就能在应用中查看到安装的软件。也可以采用软链接的方式处理本操作。
 
-comment：不懂，但跟着改。
+4. 错误查询
 
-**结果展示：**这样之后，桌面就会出现图标，并且能够正常使用。
-
-![image-20240408102413433](./Ubuntu配置软件快捷方式.assets/image-20240408102413433.png)
+如果安装了之后，能查看到软件，但是软件无法使用。可以查看系统日志`journalctl -xe | grep appName`，查看具体报错信息。
