@@ -1,17 +1,14 @@
 # Linux版本typora更新警告
 
-1. 出现问题
+## 问题描述
 
-使用`sudo apt update && sudo apt upgrade`的时候，出现报错。内容如下：
+使用`sudo apt update && sudo apt upgrade`的时候，出现以下报错。阅读报错信息可知，无法连接typora.io，链接超时。查阅资料，不少博客都表明typora.io源本身就存在一点问题，经常连接不上。如果添加源，使用命令`sudo apt update && sudo apt upgrade`就可以实现升级。但Typora作为文字编辑器，本身也不需要经常更新，所以禁用这个源就好了。
 
-![image](./Linux版本typora更新警告.assets/3420247-20240405225937268-730171395.png)
+<img src="./Linux版本typora更新警告.assets/3420247-20240405225937268-730171395.png" alt="image" style="zoom: 80%;" />
 
+## 禁用第三方源
 
-从警告的内容可以看出 **connect (101: Network is unreachable) Could not connect to typora.io:443 (199.59.149.136), connection timed out**，这个typora.io源无法连接，超时。
-
-2.  解决方法
-
-禁用第三方源
+1. 命令行方式
 
 ```shell
 # 使用管理员权限，因为修改的文件需要很高的权限
@@ -25,4 +22,8 @@ vim archive_uri-https_typora_io_linux-jammy.list
 vim archive_uri-https_typora_io_linux-jammy.list.save
 ```
 
-其实，我也不知道.save这个文件有什么区别，但是里面也保存了typora.io这个源，所以也给它注释了。之后，正常更新，没有警告了！
+其实，我也不知道.save这个文件有什么区别，但是里面也保存了typora.io这个源，所以也给它注释了。之后，正常更新，没有报错。
+
+2. 图形化界面
+
+打开 Software&Updates>Other Software，删除typora.io源即可。
