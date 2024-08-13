@@ -17,6 +17,6 @@ sudo apt-get --purge remove appName #删除软件和配置
 # 或者简写
 sudo apt-get purge appName
 # 清除不必要的依赖
-sudo apt-get autoreomove 
+sudo apt-get autoremove 
 ```
 之后用到了其他删除方法，会进行补充。
