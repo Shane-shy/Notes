@@ -2,7 +2,7 @@
 
 ## 问题描述
 
-使用Linux肯定不希望经常关机，不使用的时候，只需要把笔记本的屏幕合上。但是，我发现当我合上屏幕的时间很长的时候，再次打开电脑会出现无法唤醒的情况，即移动鼠标或者敲击键盘，电脑屏幕都不会亮。
+使用Linux肯定不希望经常关机，不使用的时候，只需要把笔记本的屏幕合上。但是，笔者发现当合上屏幕的时间很长的时候，再次打开电脑会出现无法唤醒的情况，即移动鼠标或者敲击键盘，电脑屏幕都不会亮。
 
 ## 解决方法
 
@@ -10,4 +10,4 @@
 
 解决方案：简单粗暴，在设置里面关闭自动挂起。这样虽然屏幕会黑，但是系统是没有挂起的，能够唤醒。不过，这样就是耗电一点。对于一直插电的笔记本来说，其实没什么关系。
 
-settings -> power -> power saving options -> automatic suspend off
+settings $\rightarrow$ power $\rightarrow$ power saving options $\rightarrow$ automatic suspend off
