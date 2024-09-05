@@ -159,8 +159,12 @@ git switch your_branch # Git2.23版本引入
 git checkout commit_hash # commit_hash是某个历史记录点，有一个唯一对应的哈希值。可通过git log查看。（一般用不上，都用相对引用代替，见版本回滚）
 # 创建分支
 git branch your_branch
+# 跟踪分支
+git branch -u your_remote_branch your_branch # -u参数见上。
+git branch -u your_remote_branch # 如果当前正在your_branch分支上，则可以省略
 # 创建并切换分支
 git checkout -b your_branch 
+git checkout -b your_branch your_remote_branch # 创建分支，并且让该分支跟踪某远程分支
 # 修改分支名
 git branch -m your_new_branch
 git push -u origin your_new_branch # push后才能影响远程仓库。-u参数见上
