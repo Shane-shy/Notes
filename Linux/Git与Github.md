@@ -425,15 +425,37 @@ git push origin main
 git checkout -D master
 ```
 
-2. 当远程仓库内不为空的时候，需要先拉取仓库，才能推送到分支。
+2. 远程仓库与本地仓库版本不统一，产生分歧
 
-解决方法：`git pull origin main` + 正常推送。之后，推送之前，都先pull一次。
+```shell
+# Git 终端描述
+On branch main
+Your branch and 'origin/main' have diverged,
+and have 2 and 1 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
 
-3. 使用`git pull`拉取远程仓库，产生合并冲突问题。
+nothing to commit, working tree clean
+```
 
-解决方法：
+问题原因及解决方案：本地分支与远程分支存在分歧，各自有1个和2个不同的提交。在终端中，Git也给出了解决方法。使用`git pull`合并远程分支。
 
-法一：默认使用rebase进行合并。修改`pull`的全局配置，只需修改一次。`git config pull.rebase true`。目前不明白为什么这样就能解决冲突，但是实验发现有效果。如果是不参与团队合作的话，采用这种方法比较方便。
+```shell
+# 使用git pull后的提示
+hint: You have divergent branches and need to specify how to reconcile them.
+hint: You can do so by running one of the following commands sometime before
+hint: your next pull:
+hint: 
+hint:   git config pull.rebase false  # merge (the default strategy)
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint: 
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+```
 
-法二：手动处理冲突。即，把冲突的文件找到，然后修改为真正想改的样子，提交到main分支后，再和其他分支合并。参考[解决冲突——廖雪峰](https://www.liaoxuefeng.com/wiki/896043488029600/900004111093344)
+问题原因及解决方案：存在分歧分支，需要确定合并方式。Git也给出了合并方式选择代码。注意，推荐使用`merge`，即`git config pull.rebase false`。然后正常推送到远程仓库。
+
+过程中可能会遇到冲突，需要手动处理冲突。即，把冲突的文件找到，然后修改冲突部分，最后重新推送到远程仓库。参考[解决冲突——廖雪峰](https://www.liaoxuefeng.com/wiki/896043488029600/900004111093344)
 
