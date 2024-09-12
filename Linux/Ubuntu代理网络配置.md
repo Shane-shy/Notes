@@ -53,3 +53,31 @@ Acquire::http::Proxy "http://your-proxy-server:port/";
 Acquire::https::Proxy "https://your-proxy-server:port/";
 ```
 
+## SSH
+
+- SOCKS代理：代理地址以`socks5://` 或者 `socks://` 开头。
+  - `-x`：表示后面是SOCKS代理服务器地址
+  - `-X 5`：表示SOCKS 5代理。如果是使用SOCKS 4，则改为`-X 4`
+  - `%h`和`%p`：分别表示目标主机和端口。SSH 会自动将它们替换为代理服务器地址`your_proxy_address`和端口号`your_port`
+
+```shell
+# 修改ssh配置文件。如果没有，则创建
+vim ~/.ssh/config
+# 在文件内添加
+Host example.com
+    Hostname example.com
+    ProxyCommand nc -x your_proxy_address your_port -X 5 %h %p
+```
+
+- HTTP代理：代理地址以`http://`开头。
+  - 借助工具`corkscrew`。`sudo apt install corkscrew`
+
+```shell
+# 修改ssh配置文件。如果没有，则创建
+vim ~/.ssh/config
+# 在文件内添加
+Host example.com
+    Hostname example.com
+    ProxyCommand corkscrew your_proxy_address your_port %h %p
+```
+

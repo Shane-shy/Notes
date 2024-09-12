@@ -459,3 +459,35 @@ hint: invocation.
 
 过程中可能会遇到冲突，需要手动处理冲突。即，把冲突的文件找到，然后修改冲突部分，最后重新推送到远程仓库。参考[解决冲突——廖雪峰](https://www.liaoxuefeng.com/wiki/896043488029600/900004111093344)
 
+3. `git`远程命令无法使用，使用移动数据又恢复正常（笔者使用的是**校园网**）
+
+使用`ssh -T -v git@github.com`，`-v`表示详细输出，查看问题所在。发现输出一直卡在`debug1: expecting ssh2_msg_kex_ecdh_reply`，与SSH 密钥交换有关。首先，考虑是否是网络连接存在问题，使用`ping github.com`发现能成功，故“网络没问题”（实际上，确实是网络的问题，但此时，笔者误排除了该问题）。之后，经过搜索引擎检索，有的人说是网关的MTU的问题，将其调小，小于1500即可。笔者尝试后发现不起效。由于笔者对该方面不了解，故不推荐修改MTU。最后，笔者看到了“Coding的痕迹”的博客[记 SSH 连接不上的问题](https://sunnysab.cn/2022/03/01/A-SSH-Issue/)，其中分析了问题不在MTU的原因，更加坚定了笔者不修改MTU的想法。最终，根据该博客，选择了最不折腾的方法——SSH使用代理。
+
+[修改方式](https://www.cnblogs.com/coder-shane/p/18410182)：
+
+- SOCKS代理：代理地址以`socks5://` 或者 `socks://` 开头。
+  - `-x`：表示后面是SOCKS代理服务器地址
+  - `-X 5`：表示SOCKS 5代理。如果是使用SOCKS 4，则改为`-X 4`
+  - `%h`和`%p`：分别表示目标主机和端口。SSH 会自动将它们替换为代理服务器地址`your_proxy_address`和端口号`your_port`
+
+```shell
+# 修改ssh配置文件。如果没有，则创建
+vim ~/.ssh/config
+# 在文件内添加
+Host example.com
+    Hostname example.com
+    ProxyCommand nc -x your_proxy_address your_port -X 5 %h %p
+```
+
+- HTTP代理：代理地址以`http://`开头。
+  - 借助工具`corkscrew`。`sudo apt install corkscrew`
+
+```shell
+# 修改ssh配置文件。如果没有，则创建
+vim ~/.ssh/config
+# 在文件内添加
+Host example.com
+    Hostname example.com
+    ProxyCommand corkscrew your_proxy_address your_port %h %p
+```
+
