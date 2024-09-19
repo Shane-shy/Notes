@@ -1,4 +1,4 @@
-# Git与Github
+# Git使用教程
 
 > Github是一个托管平台网站，包括但不限于托管代码，只支持Git作为唯一的版本控制方式。其实一切需要版本控制的需求，都可以使用GIthub进行托管。GIthub上的每一个仓库内存上限是1G。
 >
@@ -31,7 +31,7 @@ git config --list
    3. 在Github上配置SSH。settings -> SSH and GPG keys -> New SSH key。Title自己写，Key type选择Authentication key，然后将步骤2的密钥复制在Key内。点击Add SSH key。
    4. 检验配置结果。`ssh -T git@github.com`
 
-![image-20240407123522630](./Git与Github.assets/image-20240407123522630.png)
+![image-20240407123522630](./Git使用教程.assets/image-20240407123522630.png)
 
 ## Git的使用
 
@@ -52,7 +52,7 @@ git config --list
 3.  将文件添加到缓存区。
 4.  将文件推送到远程仓库（即Github）。
 
-![img](./Git与Github.assets/git-command.jpg)
+![img](./Git使用教程.assets/git-command.jpg)
 
 由图可以很清楚地发现：**如果要影响远程仓库，那么必须push**。
 
