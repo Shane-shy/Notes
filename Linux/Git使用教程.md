@@ -49,7 +49,7 @@ git config --list
 
 1.  打开终端，路径切换到需要上传的文件夹。
 2.  初始化仓库。这个时候，会出现一个.git的隐藏文件。git的所有操作都保存在这个文件内。**如果删除.git文件，则整个文件夹就跟普通文件夹一样了。** 只需要初始化一次。
-3.  将文件添加到缓存区。
+3.  将文件添加到暂存区。
 4.  将文件推送到远程仓库（即Github）。
 
 ![img](./Git使用教程.assets/git-command.jpg)
@@ -59,7 +59,7 @@ git config --list
 这4个区需要充分理解其含义，否则之后删除文件可能会出错。
 
 - workspace：工作区，即本地文件夹
-- staging area：缓存区
+- staging area：暂存区
 - local repository：本地仓库
 - remote repository：远程仓库
 
@@ -76,7 +76,7 @@ git remote add your_remote_name yourRepositoryURL # 关联并修改远程仓库�
 
 # 正常情况，要先拉取一下远程仓库
 git pull origin main(your branch)
-# 添加文件到缓存区，.表示全部添加，当然可以只添加某个文件
+# 添加文件到暂存区，.表示全部添加，当然可以只添加某个文件
 git add .
 # 提交文件
 git commit # 这个会出现一个vim界面，在里面写注释
@@ -88,7 +88,9 @@ git push -u origin main(your branch) # 禁止git push -f origin main 强制推�
 git push your_remote_name your_branch
 ```
 
-`origin`：是远程仓库的名称。一般都是`origin`，当然可以是其他名称，比如`develop`等。可在`clone`和远程仓库关联的时候修改
+- `git add .`：将当前工作区内的所有更改添加到暂存区。这意味着准备将这些更改添加到本地仓库，**但是这些更改还没有被记录到Git历史中**。即，更改准备提交到本地仓库。
+- `git commit`：将暂存区内的更改提交到本地仓库，**记录在Git历史中**。此时，更改才会成为一个版本，才能够被追溯。
+- `origin`：是远程仓库的名称。一般都是`origin`，当然可以是其他名称，比如`develop`等。可在`clone`和远程仓库关联的时候修改
 
 ##### push参数
 
@@ -115,7 +117,7 @@ git remote set-url newYourRepositoryURL
 git remote rename oldName newName
 ```
 
-#### 日志
+#### 操作日志
 
 ```shell
 # 查看日志，提交过的版本信息
@@ -139,9 +141,9 @@ git status --short
 
 **文件状态简要版标记解释：**
 
-1. ??：新添加的未被追踪的文件前面有红色的??标记，即这是一个全新的文件，没有加入到缓存区，即没有被执行过`git add .`命令的文件。
-2. A：新添加到缓存区的文件前面有绿色的标记，即添加到缓存区过的文件 $\rightarrow$ 有被执行过`git add .`命令的文件。
-3. AM：A表示该文件已经添加到缓存区了，M表示该文件被修改了，而修改过的文件还没有添加到缓存区，即写了一个文档，添加到缓存区后，又对这个文档进行了修改，且没有再次添加到缓存区。
+1. ??：新添加的未被追踪的文件前面有红色的??标记，即这是一个全新的文件，没有加入到暂存区，即没有被执行过`git add .`命令的文件。
+2. A：新添加到暂存区的文件前面有绿色的标记，即添加到暂存区过的文件 $\rightarrow$ 有被执行过`git add .`命令的文件。
+3. AM：A表示该文件已经添加到暂存区了，M表示该文件被修改了，而修改过的文件还没有添加到暂存区，即写了一个文档，添加到暂存区后，又对这个文档进行了修改，且没有再次添加到暂存区。
 
 #### 分支操作
 
@@ -150,8 +152,12 @@ git status --short
 针对本地仓库的分支进行操作。
 
 ```shell
-# 查看分支
+# 查看本地分支
 git branch
+# 查看远程分支，即远程追踪分支
+git branch -r
+# 查看所有分支。本地 + 远程。可结合正则表达式grep命令
+git branch -a
 # 切换分支
 git checkout your_branch
 git switch your_branch # Git2.23版本引入
@@ -214,7 +220,7 @@ git pull origin your_branch # = git fetch + git merge origin your_branch
 
 **建议删除之前，先备份文件，以防错误操作导致丢失文件！**
 
-##### 删除缓存区文件(撤销`git add .`)
+##### 删除暂存区文件(撤销`git add .`)
 
 当执行了`git add .`后，但是没有进行`git commit`和`git push`，即没有推送到远程仓库时，想撤回`git add .`
 
@@ -235,9 +241,9 @@ git rm (-r 如果有文件夹，则需要添加) --cached *
 
 是否需要重新添加文件：
 
-- `--soft`：不需要重新添加文件，文件仍在缓存区。
-- `--mixed`：默认参数，需要重新添加文件，文件不在缓存区。
-- `--hard`：没必要，会丢失所有更改。工作区和缓存区都会被重置到指定版本。
+- `--soft`：不需要重新添加文件，文件仍在暂存区。
+- `--mixed`：默认参数，需要重新添加文件，文件不在暂存区。
+- `--hard`：没必要，会丢失所有更改。工作区和暂存区都会被重置到指定版本。
 
 ##### 撤销本地仓库的文件（撤销`git commit`）
 
@@ -249,7 +255,7 @@ git rm (-r 如果有文件夹，则需要添加) --cached *
 
 ##### 仅删除远程仓库的文件，保留工作区的文件
 
-`--cached` 只会影响缓存区，不会影响工作区。
+`--cached` 只会影响暂存区，不会影响工作区。
 
 ```shell
 git rm (-r 如果有文件夹，则需要添加) --cached delete_file
@@ -271,11 +277,83 @@ git push origin your_branch
 
 正常使用`rm -rf xxx`。
 
-#### 克隆仓库
+#### 恢复文件
 
-非常常用的命令：`git clone repositoryURL`，`git clone -o your_remote_name repositoryURL`（设置远程仓库名称，默认为origin）
+`git restore` 用于帮助恢复工作区/暂存区中的文件或重置一些修改。
 
-不需要创建文件夹，该命令会把整个文件夹克隆下来。在克隆之前，需要切换到你想存放文件的文件夹路径上。
+##### 工作区
+
+**注意**：只影响工作区中的文件（即未使用了`git add .`），不会影响暂存区的文件或历史提交的文件
+
+```shell
+# 恢复某个文件到最新的提交状态（放弃本地修改），默认HEAD指向的版本
+git restore file_name
+
+# 恢复所有文件到最新的提交状态
+git restore .
+
+# 恢复某个文件到指定版本
+git restore --source commit_version file_name
+```
+
+##### 暂存区
+
+将已暂存文件从暂存区移除。**注意**：只影响暂存区中的文件（即使用了`git add .`）
+
+```shell
+git restore --staged file_name
+
+git restore --staged .
+
+git restore --source commit_version --staged file_name
+```
+
+#### 仓库同步
+
+当远程仓库与本地仓库不一致，希望放弃所有更改完成仓库的同步。
+
+##### 本地仓库同步远程仓库
+
+希望放弃本地仓库的所有更改，使得本地仓库与远程仓库一致。
+
+1. `git clone`：最简单的方式，重新克隆远程仓库
+2. 本地仓库版本比远程仓库版本新
+
+```shell
+# 换言之，撤销提交，恢复至历史提交记录
+git fetch origin # 默认远程仓库名origin，可通过 git remote -v 查看
+git reset --hard commit_version
+```
+
+3. 本地仓库版本比远程仓库版本旧
+
+```shell
+# 未发生冲突
+git pull
+# 若拉取远程仓库会发生冲突，并且希望远程仓库完全覆盖本地仓库，即懒得处理冲突，允许本地文件被覆盖
+git restore . # 将工作区文件恢复为最新版本，即丢失工作区文件
+git restore --staged . # 将已暂存文件从暂存区移除
+git pull
+```
+
+##### 远程仓库同步本地仓库
+
+当远程仓库提交记录已经很乱，希望用本地仓库直接覆盖远程仓库。
+
+**以下命令十分危险，请三思而后行，注意备份**
+
+```shell
+# 完全覆盖整个仓库，将本地仓库的所有内容完全同步到远程仓库。远程仓库中有的分支，但本地仓库没有，将会被删除
+git push --mirror origin
+
+# 等价于
+git push --all # 推送所有分支
+git push --tags # 推送所有本地标签
+git push --prune # 删除远程中本地不存在的引用
+
+# 只覆盖特定分支
+git push --force origin branch_name # origin为远程仓库名字，默认为origin，可能会被修改为其他名称
+```
 
 #### 撤销提交
 
@@ -311,9 +389,9 @@ git reset --mixed HEAD~N
 
 三种模式：
 
-- `--soft`：仅重置当前分支的 HEAD 指向的提交，**不会改变工作区和缓存区中的文件**。自该结点以来所有的更改都在**缓存区**中。方便之后操作，比如重新提交。
-- `--hard`：重置当前分支的 HEAD 指向的提交，同时**重置工作区和缓存区**。这会**完全抹掉**指定提交后的所有更改，包括未提交的工作内容。**（慎用）**
-- `--mixed`（默认）：重置当前分支的 HEAD 指向的提交，**重置缓存区**，但**不重置工作区（本地文件）**。自该结点以来所有的更改都在**工作区**中。
+- `--soft`：仅重置当前分支的 HEAD 指向的提交，**不会改变工作区和暂存区中的文件**。自该结点以来所有的更改都在**暂存区**中。方便之后操作，比如重新提交。
+- `--hard`：重置当前分支的 HEAD 指向的提交，同时**重置工作区和暂存区**。这会**完全抹掉**指定提交后的所有更改，包括未提交的工作内容。**（慎用）**
+- `--mixed`（默认）：重置当前分支的 HEAD 指向的提交，**重置暂存区**，但**不重置工作区（本地文件）**。自该结点以来所有的更改都在**工作区**中。
 
 ##### `revert`——回到过去，保留历史
 
@@ -333,6 +411,26 @@ git revert commit_hash1 commit_hash2
 git revert commit_hash_start..commit_hash_end
 ```
 
+#### 仓库备份
+
+在执行部分**危险命令**时，建议养成备份的习惯。最简单的方式是在本地手动备份。这里将展示如何创建新的分支，在远程仓库中进行备份。
+
+```shell
+# 将远程的remote_branch分支备份到backup_branch，即创建一个新的分支backup_branch，将remote_branch分支中的所有内容备份到backup_branch分支。
+git push origin remote_branch:backup_branch
+
+# 以下是相关分支查看，详见分支操作板块
+git branch
+git branch -r
+git branch -a
+```
+
+#### 克隆仓库
+
+非常常用的命令：`git clone repositoryURL`，`git clone -o your_remote_name repositoryURL`（设置远程仓库名称，默认为origin）
+
+不需要创建文件夹，该命令会把整个文件夹克隆下来。在克隆之前，需要切换到你想存放文件的文件夹路径上。
+
 #### 其他操作
 
 ```shell
@@ -347,8 +445,6 @@ git mv oldPath newPath
 git commit -m 'move xxx file' # 加了git其实就是为了对远程仓库进行操作。
 git push origin branch 
 ```
-
-
 
 ## 编写.gitignore
 
