@@ -439,6 +439,58 @@ git branch -a
 
 不需要创建文件夹，该命令会把整个文件夹克隆下来。在克隆之前，需要切换到你想存放文件的文件夹路径上。
 
+#### 仓库覆盖
+
+##### 远程仓库覆盖本地仓库
+
+1. 全部覆盖
+
+```shell
+# 获取远程仓库最新信息
+git fetch origin
+# 硬撤销。重置本地分支为远程分支的状态
+git reset --hard origin/<branch_name> # 例如：git reset --hard origin/main
+```
+
+2. 覆盖指定文件夹
+
+```shell
+git checkout origin/<branch_name> -- <path_to_folder> # 注意 -- 之后有空格 
+
+# 例如
+git checkout origin/main -- Notes/ 
+
+# 提交更改（可选，但最好加上。因为也可以随下一次提交一起）
+git add <your_files>
+git commit -m "your comment"
+git push origin <branch_name>
+```
+
+##### 本地仓库覆盖远程仓库
+
+1. 全部覆盖
+
+```shell
+# 正常添加所有文件夹
+git add .
+git commit -m 'your comment'
+git push origin <branch_name> --force # --force参数，非常危险
+```
+
+2. 覆盖指定文件夹
+
+```shell
+git fetch # 获取远程仓库的信息
+git checkout <branch_name> -- path/to/folder # 可以简单理解为有origin的就是远程仓库
+# 例如
+git checkout main -- Notes/ 
+
+# 提交更改（可选，但最好加上。因为也可以随下一次提交一起）
+git add <your_files>
+git commit -m "your comment"
+git push origin <branch_name>
+```
+
 #### 其他操作
 
 ```shell
