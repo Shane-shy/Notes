@@ -10,7 +10,19 @@
 
 ```shell
 export http_proxy="http://your-proxy-server:port"
-export https_proxy="http://your-proxy-server:port"
+export https_proxy="https://your-proxy-server:port"
+# 代理所有协议app_proxy
+export all_proxy="http://your-proxy-server:port"
+
+# 若想使用sock5h进行连接。sock5h的优势是在远端进行DNS解析，更安全
+export http_proxy="socks5h://your-proxy-server:port"
+export https_proxy="socks5h://your-proxy-server:port"
+export all_proxy="socks5h://your-proxy-server:port"
+
+# 推荐
+export http_proxy="http://your-proxy-server:port"
+export https_proxy="https://your-proxy-server:port"
+export all_proxy="socks5h://your-proxy-server:port"
 ```
 
 ### 永久配置
@@ -20,7 +32,16 @@ export https_proxy="http://your-proxy-server:port"
 vim ~/.bashrc
 # 末端添加
 export http_proxy="http://your-proxy-server:port"
-export https_proxy="http://your-proxy-server:port"
+export https_proxy="https://your-proxy-server:port"
+export all_proxy="http://your-proxy-server:port"
+# sock5h版本
+export http_proxy="socks5h://your-proxy-server:port"
+export https_proxy="socks5h://your-proxy-server:port"
+export all_proxy="socks5h://your-proxy-server:port"
+# 我推荐的版本，混合使用。这样不影响一些只能通过http或者https协议的命令
+export http_proxy="http://your-proxy-server:port"
+export https_proxy="https://your-proxy-server:port"
+export all_proxy="socks5h://your-proxy-server:port"
 # 刷新.bashrc
 source ~/.bashrc
 ```
@@ -34,6 +55,7 @@ source ~/.bashrc
 ```shell
 echo $http_proxy
 echo $https_proxy
+echo $all_proxy
 
 # 或者curl命令查看某国外网站信息。-I查看网站信息
 curl -I XXX.com
@@ -51,9 +73,18 @@ sudo vim /etc/apt/apt.conf.d/95proxies
 # 添加以下内容
 Acquire::http::Proxy "http://your-proxy-server:port/";
 Acquire::https::Proxy "https://your-proxy-server:port/";
+# 文件传输，虽然目前一般都用http或者https
+Acquire::ftp::Proxy "https://your-proxy-server:port/";
+
+# socks5h版本。apt（UBuntu 18.04之后的版本）支持socks5，所以全用socks5也没问题
+Acquire::http::Proxy "socks5h://your-proxy-server:port/";
+Acquire::https::Proxy "socks5h://your-proxy-server:port/";
+Acquire::ftp::Proxy "socks5h://your-proxy-server:port/";
 ```
 
 ## SSH
+
+因为咱们ssh连接的服务器一般都是国内的，所以不推荐修改。
 
 - SOCKS代理：代理地址以`socks5://` 或者 `socks://` 开头。
   - `-x`：表示后面是SOCKS代理服务器地址
