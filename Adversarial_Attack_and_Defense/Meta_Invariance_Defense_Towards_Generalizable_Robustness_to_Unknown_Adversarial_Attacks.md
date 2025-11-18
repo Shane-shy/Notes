@@ -30,7 +30,7 @@
    2. 元测试阶段：在*Attacker Pool*中随机采样未被选中的攻击样本（模拟未知攻击样本），临时模型进行一次梯度更新。用于模拟
    3. $L_{total} = L_{meta-train} + L_{meta-test}$ 用于更新原始模型，提高原始模型在新任务中的适应能力。
 
-   <img src="./Meta_Invariance_Defense_Towards_Generalizable _Robustness_to_Unknown_Adversarial_Attacks.assets/image-20251118090538144.png" alt="image-20251118090538144" style="zoom: 33%;" />
+   <img src="./Meta_Invariance_Defense_Towards_Generalizable_Robustness_to_Unknown_Adversarial_Attacks.assets/image-20251118090538144.png" alt="image-20251118090538144" style="zoom: 33%;" />
 
 2. Multi-consistency distilled from the teacher model——三个板块的损失函数设计
 
@@ -38,7 +38,7 @@
    >
    > $E(\theta)$是特征提取器（encoder），$C(w,b)$是分类器，$F(\theta,w,b)$ 是一个完整的模型
 
-   ![image-20251118090941540](./Meta_Invariance_Defense_Towards_Generalizable _Robustness_to_Unknown_Adversarial_Attacks.assets/image-20251118090941540.png)
+   ![image-20251118090941540](./Meta_Invariance_Defense_Towards_Generalizable_Robustness_to_Unknown_Adversarial_Attacks.assets/image-20251118090941540.png)
 
    1. Adversarial Consistency 
       - $L_{\text{AC}} = \sum_{n=1}^{N} \sum_{i=1}^{I} 
@@ -75,7 +75,7 @@
 
 > 根据伪代码和论文给出的公式可猜测，论文中的$L_\text{total}$式子中，正文藏了超参系数。
 
-<img src="./Meta_Invariance_Defense_Towards_Generalizable _Robustness_to_Unknown_Adversarial_Attacks.assets/image-20251118095013863.png" alt="image-20251118095013863" style="zoom:50%;" />
+<img src="./Meta_Invariance_Defense_Towards_Generalizable_Robustness_to_Unknown_Adversarial_Attacks.assets/image-20251118095013863.png" alt="image-20251118095013863" style="zoom:50%;" />
 
 ### 可行性理论分析
 
@@ -108,13 +108,13 @@ $$
 - 对抗攻击样本，不是单纯地加噪声，而是沿着**梯度上升**的方向将特征从流形推到边缘，甚至是外面
 - Adversarial Consistency 、Cyclic Consistency、Label Consistency 将特征从外面拉回至流形
 
-<img src="./Meta_Invariance_Defense_Towards_Generalizable _Robustness_to_Unknown_Adversarial_Attacks.assets/image-20251118103111293.png" alt="image-20251118103111293" style="zoom:50%;" />
+<img src="./Meta_Invariance_Defense_Towards_Generalizable_Robustness_to_Unknown_Adversarial_Attacks.assets/image-20251118103111293.png" alt="image-20251118103111293" style="zoom:50%;" />
 
 3. 高阶优化的角度（几乎完全是域泛化的视角）
 
 - 高阶优化能更容易找到平坦点。越平坦，泛化性越好。一阶导数决定了原函数的走向，二阶导数决定了一阶导数的走向。当二阶导数很小的时候，一阶导数会更小，更平滑，对应的原函数就会更平滑，更平坦。（用一个简单的例子，解释了直觉上很能接受的现象）
 
-<img src="./Meta_Invariance_Defense_Towards_Generalizable _Robustness_to_Unknown_Adversarial_Attacks.assets/image-20251118103248727.png" alt="image-20251118103248727" style="zoom:50%;" />
+<img src="./Meta_Invariance_Defense_Towards_Generalizable_Robustness_to_Unknown_Adversarial_Attacks.assets/image-20251118103248727.png" alt="image-20251118103248727" style="zoom:50%;" />
 
 - 解释MID中，存在二次项。实际上，没有去计算Hessian。
 
@@ -144,7 +144,7 @@ $$
 
 > 本论文做了很多实验，在此不一一列举。从所有实验总体上看，对于部分数据集（MINIST）略有提升，对于部分数据集（SVHN）提升巨大，对大多数据集都有1-2%的提升。MID对已知攻击和未知攻击都能做到比较好的防御。
 
-![image-20251118105422479](./Meta_Invariance_Defense_Towards_Generalizable _Robustness_to_Unknown_Adversarial_Attacks.assets/image-20251118105422479.png)
+![image-20251118105422479](./Meta_Invariance_Defense_Towards_Generalizable_Robustness_to_Unknown_Adversarial_Attacks.assets/image-20251118105422479.png)
 
 ---
 
