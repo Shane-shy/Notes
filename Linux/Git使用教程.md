@@ -58,10 +58,12 @@ git config --list
 
 这4个区需要充分理解其含义，否则之后删除文件可能会出错。
 
-- workspace：工作区，即本地文件夹
-- staging area：暂存区
-- local repository：本地仓库
+- workspace：工作区。正在动手修改的真实文件，但是还没有记录这些修改。
+- staging area：暂存区。正式准备记录这些被修改的文件。`git add`之后。
+- local repository：本地仓库。`git commit`正式提交修改文件的记录。
 - remote repository：远程仓库
+
+**新理解：**Git本地仓库一直保存着所有版本的所有文件内容，工作区只是其中一个视图。`git fetch`就是把远程仓库的最新数据库补充到本地`.git`里，但是不要动工作区。`git merge`将最新的数据与本地工作区合并。这就是为什么远程仓库文件夹覆盖本地文件夹不需要`git pull`的原因。因为远程仓库的文件变化始终存在了本地仓库里，只是没有引用最新的数据。
 
 #### 常用命令
 
@@ -287,9 +289,11 @@ git push origin your_branch
 
 #### 文件恢复
 
-`git restore` 用于帮助恢复工作区/暂存区中的文件或重置一些修改。与`git reset`部分功能重合，但是该命令最大的特点是**不影响提交记录**。
+`git restore` （改变文件内容）用于帮助恢复工作区/暂存区中的文件或重置一些修改。与`git reset`（改变指针）部分功能重合，但是该命令最大的特点是**不影响提交记录**。
 
 ##### 工作区
+
+恢复到历史记录中的某一个状态。
 
 **注意**：只影响工作区中的文件（即未使用了`git add .`），不会影响暂存区的文件或历史记录，即保留历史记录（保留提交记录）。
 
@@ -306,7 +310,9 @@ git restore --source commit_version file_name
 
 ##### 暂存区
 
-将已暂存文件从暂存区移除。**注意**：只影响暂存区中的文件（即使用了`git add .`）
+将已暂存文件从暂存区移除，但是仍然被`Git`跟踪。**注意**：只影响暂存区中的文件（即使用了`git add .`）
+
+对比类似功能的`git rm -r --cached XX`，该命令更强大。它能将文件移除暂存区，同时取消`Git`的跟踪，后续提交到远程，会把文件删掉。
 
 ```shell
 git restore --staged file_name
@@ -455,15 +461,12 @@ git reset --hard origin/<branch_name> # 例如：git reset --hard origin/main
 2. 覆盖指定文件夹
 
 ```shell
+git fetch #（可选）确定本地指针是最新的
+# 这一步的作用是：把远程分支中的XX文件夹取出来，并且覆盖到本地
 git checkout origin/<branch_name> -- <path_to_folder> # 注意 -- 之后有空格 
 
 # 例如
 git checkout origin/main -- Notes/ 
-
-# 提交更改（可选，但最好加上。因为也可以随下一次提交一起）
-git add <your_files>
-git commit -m "your comment"
-git push origin <branch_name>
 ```
 
 ##### 本地仓库覆盖远程仓库
@@ -480,15 +483,9 @@ git push origin <branch_name> --force # --force参数，非常危险
 2. 覆盖指定文件夹
 
 ```shell
-git fetch # 获取远程仓库的信息
-git checkout <branch_name> -- path/to/folder # 可以简单理解为有origin的就是远程仓库
-# 例如
-git checkout main -- Notes/ 
-
-# 提交更改（可选，但最好加上。因为也可以随下一次提交一起）
 git add <your_files>
 git commit -m "your comment"
-git push origin <branch_name>
+git push origin <branch_name> # 如果存在冲突就添加--force，强制推送
 ```
 
 #### 其他操作
@@ -611,11 +608,33 @@ hint: or --ff-only on the command line to override the configured default per
 hint: invocation.
 ```
 
-问题原因及解决方案：存在分歧分支，需要确定合并方式。Git也给出了合并方式选择代码。注意，推荐使用`merge`，即`git config pull.rebase false`。然后正常推送到远程仓库。
+问题原因及解决方案：存在分歧分支，需要确定合并方式。Git也给出了合并方式选择代码。注意，推荐使用`merge`，即`git config pull.rebase false`。然后正常推送到远程仓库。目前理解rebase相当于先把之前的提交拿下来，然后新的提交接在之前的后面，日志会被破坏，但是看上去更清爽（个人使用时，十分推荐）；merge是将两个日志合并为一个结点，会多一个Y字形的分岔。时间久了，看上去会很乱（团队合作时，十分推荐）。
 
 过程中可能会遇到冲突，需要手动处理冲突。即，把冲突的文件找到，然后修改冲突部分，最后重新推送到远程仓库。参考[解决冲突——廖雪峰](https://www.liaoxuefeng.com/wiki/896043488029600/900004111093344)
 
-3. `git`远程命令无法使用，使用移动数据又恢复正常（我使用的是**校园网**）
+3. 同事先提交了一份文件
+
+这时，有以下做法：
+
+- 正常提交，发现版本不对。如果没有冲突（最轻松愉快的情况）
+
+```shell
+git pull # 如果不想产生merge结点，那么使用--rebase。看上去就像你接着别人提交后的文件写的
+# 假设已经提交记录，即已经完成了git add和git commit 
+git push
+```
+
+- 正常提交，发现版本不对。如果出现冲突（手动解决冲突）
+- 没有提交，但是听说了同事提交了新版本。暂时清空工作区，更新版本后，恢复工作区继续写
+
+```shell
+# 暂存工作区内变动
+git stash
+git pull
+git stash pop # 恢复工作区内的变动
+```
+
+4. `git`远程命令无法使用，使用移动数据又恢复正常（我使用的是**校园网**）
 
 使用`ssh -T -v git@github.com`，`-v`表示详细输出，查看问题所在。发现输出一直卡在`debug1: expecting ssh2_msg_kex_ecdh_reply`，与SSH 密钥交换有关。首先，考虑是否是网络连接存在问题，使用`ping github.com`发现能成功，故“网络没问题”（实际上，确实是网络的问题，但此时，我误排除了该问题）。之后，经过搜索引擎检索，有的人说是网关的MTU的问题，将其调小，小于1500即可。我尝试后发现不起效。由于我对该方面不了解，故不推荐修改MTU。最后，我看到了“Coding的痕迹”的博客[记 SSH 连接不上的问题](https://sunnysab.cn/2022/03/01/A-SSH-Issue/)，其中分析了问题不在MTU的原因，更加坚定了我不修改MTU的想法。最终，根据该博客，选择了最不折腾的方法——SSH使用代理。
 
